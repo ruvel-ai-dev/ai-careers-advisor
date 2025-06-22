@@ -1,91 +1,120 @@
 
 # AI Careers Advisor (UK)
 
-A web-based AI assistant to support UK-based job seekers throughout the job application process, including CV improvement, tailoring, job advert analysis, and interview preparation.
+An AI-powered careers advisor designed specifically for UK job seekers. This web-based tool supports CV feedback, tailored CV rewriting, job requirement extraction, and interview preparation — all using local AI models (LLaMA 3 via Ollama) for complete offline functionality.
 
-## 🎯 Features
+## 🔧 Features
 
-This AI-powered platform offers:
-
-1. **Extract key requirements from job adverts**
-2. **Upload a CV** to either:
-   - Get feedback and advice on improvement (UK standards)
-   - Rewrite it to UK industry norms (clearly marking example/template content)
-3. **Upload both CV and job advert** to:
-   - Receive advice on tailoring
-   - Automatically generate a rewritten CV tailored to the job (no embellishments, UK spelling only)
-4. **Interview preparation:**
-   - Generate 20 likely questions from the job advert (including 5 technical + 10 competency-based)
-   - Generate tailored answers based on your CV
+- ✅ Extract key job requirements from job adverts (PDF/DOCX)
+- ✅ Upload your CV for feedback and rewriting to UK standards
+- ✅ Tailor your CV to a specific job (with or without rewriting)
+- ✅ Generate interview questions based on job requirements
+- ✅ Generate tailored answers based on your CV
+- ✅ Offline, local AI via Ollama (LLaMA 3)
+- ✅ Simple web interface (Flask + HTML)
 
 ---
 
-## 🗂️ Folder Structure
+## 📸 Screenshots
+
+### 🏠 Main Page
+![Main Page](docs/Main%20Page.jpg)
+
+---
+
+### 📄 Tailored CV Result Example
+![Tailored CV Results Page](docs/Tailored%20CV%20Results%20Page.jpg)
+
+---
+
+### ❓ Likely Interview Questions Output
+![Likely Interview Questions Results Page](docs/Likely%20Interview%20Questions%20Results%20Page.jpg)
+
+---
+
+## 🗂️ Project Structure
 
 ```
 careers-advisor/
-├── app.py                      # Main Flask app
-├── requirements.txt            # Python dependencies
-├── templates/                  # HTML templates
-│   ├── index.html              # Homepage form
-│   └── results.html            # Results display
+├── app.py
+├── requirements.txt
 ├── static/
-│   └── style.css               # Page styling
-├── uploads/                    # Uploaded documents
+│   └── style.css
+├── templates/
+│   ├── index.html
+│   └── results.html
+├── uploads/
 │   ├── cvs/
 │   └── jobadverts/
-├── utils/                      # Backend logic
-│   ├── extract_text.py         # Extract text from PDF/DOCX
-│   ├── cv_feedback.py          # Feedback and rewriting logic
-│   ├── tailor_cv.py            # Tailoring logic for job adverts
-│   ├── interview_questions.py  # Question generation
-│   └── generate_answers.py     # Answer generation using CV
+├── utils/
+│   ├── extract_text.py
+│   ├── cv_feedback.py
+│   ├── tailor_cv.py
+│   ├── interview_questions.py
+│   └── generate_answers.py
+├── docs/
+│   ├── Main Page.jpg
+│   ├── Tailored CV Results Page.jpg
+│   └── Likely Interview Questions Results Page.jpg
+└── README.md
 ```
 
 ---
 
-## 🚀 Installation
+## 📦 Requirements
 
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/yourusername/careers-advisor.git
-cd careers-advisor
+```text
+flask
+python-docx
+pypdf
+langchain
+langchain-community
+langchain-ollama
+sentence-transformers
+faiss-cpu
+unstructured[local-inference]
 ```
 
-### 2. Set up virtual environment
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-### 3. Install dependencies
-
+Install with:
 ```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## 🧠 How It Works
+## 🚀 How to Run Locally
 
-- Built using **Flask** for the web interface.
-- Uses **LangChain** with **LLaMA 3 (via Ollama)** for all LLM-based features.
-- Handles PDF and DOCX file input.
-- Generates text output and downloadable rewritten CVs.
+```bash
+# Clone the repo
+git clone https://github.com/ruvel-ai-dev/ai-careers-advisor.git
+cd ai-careers-advisor
 
-All outputs follow **British spelling**, are free of embellishment, and label any suggested example content clearly.
+# Set up virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the app
+python3 app.py
+```
+
+Then visit: `http://127.0.0.1:5000` in your browser.
 
 ---
 
-## 🔐 Notes
+## 🧠 Powered By
 
-- Make sure **Ollama** is installed and running locally.
-- Ensure all models used (e.g. `llama3`) are downloaded in Ollama.
+- [LangChain](https://www.langchain.com/)
+- [Ollama](https://ollama.com/)
+- [LLaMA 3](https://llama.meta.com/)
+- [FAISS](https://github.com/facebookresearch/faiss)
 
 ---
 
-## 📄 License
+## 📬 Contact
 
-MIT License – feel free to fork and adapt for educational or career support purposes.
+**Ruvel Miah**  
+Email: [ruvel.ai.dev@gmail.com](mailto:ruvel.ai.dev@gmail.com)  
+GitHub: [ruvel-ai-dev](https://github.com/ruvel-ai-dev)
