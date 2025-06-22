@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Careers Advisor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Careers Advisor (UK)</h1>
+        <p>Select an option below and upload the relevant documents.</p>
+
+        <form action="/process" method="post" enctype="multipart/form-data">
+            <label for="task">Choose a task:</label>
+            <select name="task" id="task" required>
+                <option value="" disabled selected>-- Select a task --</option>
+                <option value="extract_job">1. Extract key requirements from Job Advert</option>
+                <option value="cv_feedback">2a. Get CV improvement advice</option>
+                <option value="cv_rewrite">2b. Rewrite CV to UK industry standard (examples marked)</option>
+                <option value="tailor_advice">3a. Get advice on how to tailor CV to this Job</option>
+                <option value="tailor_rewrite">3b. Rewrite CV tailored to Job (no embellishment)</option>
+                <option value="interview_questions">4. Generate 20 likely Interview Questions</option>
+                <option value="answer_questions">5. Suggest Interview Answers using your CV</option>
+            </select>
+
+            <label for="cv_file">Upload CV (PDF or Word):</label>
+            <input type="file" name="cv_file" id="cv_file" accept=".pdf,.doc,.docx">
+
+            <label for="job_file">Upload Job Advert (PDF or Word):</label>
+            <input type="file" name="job_file" id="job_file" accept=".pdf,.doc,.docx">
+
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

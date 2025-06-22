@@ -1,0 +1,9 @@
+flask
+python-docx
+pypdf
+langchain
+langchain-community
+langchain-ollama
+sentence-transformers
+faiss-cpu
+unstructured[local-inference]
