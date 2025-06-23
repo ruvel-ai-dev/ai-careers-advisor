@@ -31,7 +31,14 @@
 
             <br><br>
             <button type="submit">Submit</button>
+            <div id="spinner" class="spinner hidden"></div>
         </form>
     </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function () {
+            document.getElementById('spinner').classList.remove('hidden');
+        });
+    </script>
 </body>
 </html>
