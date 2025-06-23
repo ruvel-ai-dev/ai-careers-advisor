@@ -7,6 +7,7 @@ from utils.cv_feedback import give_cv_feedback, improve_cv
 from utils.tailor_cv import tailor_cv_to_job
 from utils.interview_questions import generate_interview_questions
 from utils.generate_answers import generate_answers_from_cv
+from utils.docx_writer import write_formatted_docx
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -57,9 +58,8 @@ def process():
                 return render_template("results.html", error="Please upload a CV.")
             cv_text = extract_text_from_file(cv_path)
             rewritten = improve_cv(cv_text)
-            output_file = f"{cv_path}_improved.txt"
-            with open(output_file, 'w') as f:
-                f.write(rewritten)
+            output_file = f"{os.path.splitext(cv_path)[0]}_improved.docx"
+            write_formatted_docx(rewritten, output_file)
             return render_template("results.html", result="Improved CV generated below.", download_link=output_file)
 
         elif task == "tailor_advice":
@@ -75,9 +75,8 @@ def process():
             cv_text = extract_text_from_file(cv_path)
             job_text = extract_text_from_file(job_path)
             tailored = tailor_cv_to_job(cv_text, job_text, mode="rewrite")
-            output_file = f"{cv_path}_tailored.txt"
-            with open(output_file, 'w') as f:
-                f.write(tailored)
+            output_file = f"{os.path.splitext(cv_path)[0]}_tailored.docx"
+            write_formatted_docx(tailored, output_file)
             return render_template("results.html", result="Tailored CV generated below.", download_link=output_file)
 
         elif task == "interview_questions":
