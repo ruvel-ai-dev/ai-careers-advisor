@@ -16,20 +16,6 @@
             font-family: monospace;
         }
 
-        .copy-btn {
-            margin-bottom: 0.5rem;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-
-        .copy-msg {
-            margin-left: 0.5rem;
-            color: green;
-            font-weight: bold;
-            display: none;
-        }
-
         .container {
             max-width: 800px;
             margin: 2rem auto;
@@ -63,9 +49,7 @@
         {% else %}
             <h2>Response:</h2>
             <div class="result-box">
-                <button class="copy-btn" onclick="copyResult()">Copy</button>
-                <span class="copy-msg" id="copy-msg">Copied!</span>
-                <pre id="result-text">{{ result }}</pre>
+                <pre>{{ result }}</pre>
             </div>
 
             {% if download_link %}
@@ -76,18 +60,5 @@
         <br>
         <a class="button" href="{{ url_for('index') }}">⬅ Back to Home</a>
     </div>
-
-    <script>
-        function copyResult() {
-            const text = document.getElementById('result-text').innerText;
-            navigator.clipboard.writeText(text).then(function () {
-                const msg = document.getElementById('copy-msg');
-                msg.style.display = 'inline';
-                setTimeout(function () {
-                    msg.style.display = 'none';
-                }, 2000);
-            });
-        }
-    </script>
 </body>
 </html>
