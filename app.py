@@ -121,4 +121,6 @@ def download_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], safe_path, as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    debug_env = os.getenv('FLASK_DEBUG', 'False')
+    debug_mode = debug_env.lower() in ('1', 'true', 'yes', 'y', 't')
+    app.run(debug=debug_mode)
