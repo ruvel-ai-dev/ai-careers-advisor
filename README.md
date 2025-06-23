@@ -96,7 +96,10 @@ source venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Run the app
+# Optional: enable debug output
+export FLASK_DEBUG=True
+
+# Run the app (defaults to non-debug mode)
 python3 app.py
 ```
 
