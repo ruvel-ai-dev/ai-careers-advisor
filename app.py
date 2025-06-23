@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, send_from_directory, abort, url_for
 import os
 import uuid
 
@@ -60,7 +60,13 @@ def process():
             output_file = f"{cv_path}_improved.txt"
             with open(output_file, 'w') as f:
                 f.write(rewritten)
-            return render_template("results.html", result="Improved CV generated below.", download_link=output_file)
+            rel_path = os.path.relpath(output_file, app.config['UPLOAD_FOLDER'])
+            download_url = url_for('download_file', filename=rel_path)
+            return render_template(
+                "results.html",
+                result="Improved CV generated below.",
+                download_link=download_url,
+            )
 
         elif task == "tailor_advice":
             if not cv_path or not job_path:
@@ -78,7 +84,13 @@ def process():
             output_file = f"{cv_path}_tailored.txt"
             with open(output_file, 'w') as f:
                 f.write(tailored)
-            return render_template("results.html", result="Tailored CV generated below.", download_link=output_file)
+            rel_path = os.path.relpath(output_file, app.config['UPLOAD_FOLDER'])
+            download_url = url_for('download_file', filename=rel_path)
+            return render_template(
+                "results.html",
+                result="Tailored CV generated below.",
+                download_link=download_url,
+            )
 
         elif task == "interview_questions":
             if not job_path:
@@ -101,9 +113,12 @@ def process():
     except Exception as e:
         return render_template("results.html", error=f"An error occurred: {str(e)}")
 
-@app.route('/<path:filename>')
+@app.route('/download/<path:filename>')
 def download_file(filename):
-    return send_file(filename, as_attachment=True)
+    safe_path = os.path.normpath(filename)
+    if os.path.isabs(safe_path) or '..' in safe_path.split(os.path.sep):
+        abort(400)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], safe_path, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
