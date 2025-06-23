@@ -4,12 +4,22 @@
     <meta charset="UTF-8">
     <title>AI Careers Advisor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <!-- Fallback style in case CSS doesn't load -->
+    <style>
+        #loading.hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
+    <!-- Spinner (hidden by default using class="hidden") -->
     <div id="loading" class="hidden">
         <div class="spinner"></div>
         <p>One moment while the advisor thinks…</p>
     </div>
+
+    <!-- Main form container -->
     <div class="container">
         <h1>AI Careers Advisor (UK)</h1>
         <p>Select an option below and upload the relevant documents.</p>
@@ -33,14 +43,21 @@
             <label for="job_file">Upload Job Advert (PDF or Word):</label>
             <input type="file" name="job_file" id="job_file" accept=".pdf,.doc,.docx">
 
-            <br><br>
             <button type="submit">Submit</button>
         </form>
     </div>
+
+    <!-- JavaScript: Only show spinner after form is submitted -->
     <script>
-        const form = document.querySelector('form');
-        form.addEventListener('submit', () => {
-            document.getElementById('loading').classList.remove('hidden');
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const loading = document.getElementById("loading");
+
+            if (form && loading) {
+                form.addEventListener("submit", () => {
+                    loading.classList.remove("hidden");
+                });
+            }
         });
     </script>
 </body>
