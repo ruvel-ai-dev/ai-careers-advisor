@@ -23,15 +23,47 @@
                 <option value="answer_questions">5. Suggest Interview Answers using your CV</option>
             </select>
 
-            <label for="cv_file">Upload CV (PDF or Word):</label>
-            <input type="file" name="cv_file" id="cv_file" accept=".pdf,.doc,.docx">
+            <div id="cv-container" style="display: none;">
+                <label for="cv_file">Upload CV (PDF or Word):</label>
+                <input type="file" name="cv_file" id="cv_file" accept=".pdf,.doc,.docx">
+            </div>
 
-            <label for="job_file">Upload Job Advert (PDF or Word):</label>
-            <input type="file" name="job_file" id="job_file" accept=".pdf,.doc,.docx">
+            <div id="job-container" style="display: none;">
+                <label for="job_file">Upload Job Advert (PDF or Word):</label>
+                <input type="file" name="job_file" id="job_file" accept=".pdf,.doc,.docx">
+            </div>
 
             <br><br>
             <button type="submit">Submit</button>
         </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskSelect = document.getElementById('task');
+            const cvContainer = document.getElementById('cv-container');
+            const jobContainer = document.getElementById('job-container');
+
+            function updateFields() {
+                const task = taskSelect.value;
+
+                // Hide all by default
+                cvContainer.style.display = 'none';
+                jobContainer.style.display = 'none';
+
+                if (['cv_feedback', 'cv_rewrite'].includes(task)) {
+                    cvContainer.style.display = 'block';
+                } else if (['extract_job', 'interview_questions'].includes(task)) {
+                    jobContainer.style.display = 'block';
+                } else if (['tailor_advice', 'tailor_rewrite', 'answer_questions'].includes(task)) {
+                    cvContainer.style.display = 'block';
+                    jobContainer.style.display = 'block';
+                }
+            }
+
+            taskSelect.addEventListener('change', updateFields);
+            updateFields(); // Initial state on load
+        });
+    </script>
 </body>
 </html>
