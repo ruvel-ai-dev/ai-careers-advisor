@@ -46,15 +46,17 @@
 
         {% if error %}
             <p class="error">{{ error }}</p>
-        {% else %}
+        {% endif %}
+
+        {% if result %}
             <h2>Response:</h2>
             <div class="result-box">
                 <pre>{{ result }}</pre>
             </div>
+        {% endif %}
 
-            {% if download_link %}
-                <a class="button" href="{{ download_link }}" download>Download Tailored CV</a>
-            {% endif %}
+        {% if download_link %}
+            <a class="button" href="{{ download_link }}" download>Download Tailored CV</a>
         {% endif %}
 
         <br>

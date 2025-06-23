@@ -60,7 +60,11 @@ def process():
             output_file = f"{cv_path}_improved.txt"
             with open(output_file, 'w') as f:
                 f.write(rewritten)
-            return render_template("results.html", result="Improved CV generated below.", download_link=output_file)
+            return render_template(
+                "results.html",
+                result=rewritten,
+                download_link=output_file,
+            )
 
         elif task == "tailor_advice":
             if not cv_path or not job_path:
@@ -78,7 +82,11 @@ def process():
             output_file = f"{cv_path}_tailored.txt"
             with open(output_file, 'w') as f:
                 f.write(tailored)
-            return render_template("results.html", result="Tailored CV generated below.", download_link=output_file)
+            return render_template(
+                "results.html",
+                result=tailored,
+                download_link=output_file,
+            )
 
         elif task == "interview_questions":
             if not job_path:
