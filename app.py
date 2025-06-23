@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, send_file, send_from_directory, abort, url_for
 import os
 import uuid
+from docx import Document  # ✅ NEW: For .docx output
 
 from utils.extract_text import extract_text_from_file
 from utils.cv_feedback import give_cv_feedback, improve_cv
@@ -57,9 +58,15 @@ def process():
                 return render_template("results.html", error="Please upload a CV.")
             cv_text = extract_text_from_file(cv_path)
             rewritten = improve_cv(cv_text)
-            output_file = f"{cv_path}_improved.txt"
-            with open(output_file, 'w') as f:
-                f.write(rewritten)
+
+            # ✅ Save as .docx file
+            output_file = f"{cv_path}_improved.docx"
+            doc = Document()
+            for line in rewritten.split('\n'):
+                if line.strip():
+                    doc.add_paragraph(line.strip())
+            doc.save(output_file)
+
             rel_path = os.path.relpath(output_file, app.config['UPLOAD_FOLDER'])
             download_url = url_for('download_file', filename=rel_path)
             return render_template(
@@ -81,9 +88,15 @@ def process():
             cv_text = extract_text_from_file(cv_path)
             job_text = extract_text_from_file(job_path)
             tailored = tailor_cv_to_job(cv_text, job_text, mode="rewrite")
-            output_file = f"{cv_path}_tailored.txt"
-            with open(output_file, 'w') as f:
-                f.write(tailored)
+
+            # ✅ Save as .docx file
+            output_file = f"{cv_path}_tailored.docx"
+            doc = Document()
+            for line in tailored.split('\n'):
+                if line.strip():
+                    doc.add_paragraph(line.strip())
+            doc.save(output_file)
+
             rel_path = os.path.relpath(output_file, app.config['UPLOAD_FOLDER'])
             download_url = url_for('download_file', filename=rel_path)
             return render_template(
