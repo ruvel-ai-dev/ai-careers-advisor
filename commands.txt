@@ -1,0 +1,23 @@
+=== AI Careers Advisor – Command Guide (Ubuntu / WSL2) ===
+
+STEP 1 – Open Terminal (Ubuntu)
+
+STEP 2 – Navigate to your project folder:
+cd ~/careers-advisor
+
+STEP 3 – Activate the virtual environment:
+source venv/bin/activate
+
+STEP 4 – Run the AI script on your PDF:
+python3 local_pdf_query.py
+
+STEP 5 – Exit the virtual environment when done:
+deactivate
+
+OPTIONAL COMMANDS:
+- List project files: ls
+- Check current folder: pwd
+- Open Visual Studio Code: code .
+
+NEW - Run AI Script on any PDF:
+python3 query_any_pdf.py

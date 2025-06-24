@@ -1,91 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>AI Careers Advisor</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <style>
-    /* Fallback to ensure hidden still works if CSS fails */
-    #loading.hidden {
-      display: none !important;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>AI Careers Advisor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function showFields() {
+            const task = document.getElementById('task').value;
+            document.getElementById('job_file_group').style.display = ['extract_job', 'tailor_advice', 'tailor_rewrite', 'interview_questions', 'answer_questions'].includes(task) ? 'block' : 'none';
+            document.getElementById('cv_file_group').style.display = ['cv_feedback', 'cv_rewrite', 'tailor_advice', 'tailor_rewrite', 'answer_questions'].includes(task) ? 'block' : 'none';
+        }
+
+        document.addEventListener("DOMContentLoaded", showFields);
+    </script>
 </head>
 <body>
-  <!-- Spinner (hidden by default) -->
-  <div id="loading" class="hidden">
-    <div class="spinner"></div>
-    <p>One moment while the advisor processes your request...</p>
-  </div>
+    <div class="container">
+        <h1>AI Careers Advisor</h1>
 
-  <div class="container">
-    <h1>AI Careers Advisor (UK)</h1>
-    <p>Select a task and upload the relevant documents.</p>
+        <form action="/process" method="post" enctype="multipart/form-data">
+            <label for="task">Choose a task:</label>
+            <select name="task" id="task" onchange="showFields()">
+                <option value="extract_job">Extract job requirements from job advert</option>
+                <option value="cv_feedback">Get feedback on my CV</option>
+                <option value="cv_rewrite">Rewrite my CV to UK industry standard</option>
+                <option value="tailor_advice">Get advice on how to tailor my CV</option>
+                <option value="tailor_rewrite">Rewrite my CV to match the job</option>
+                <option value="interview_questions">Generate interview questions</option>
+                <option value="answer_questions">Generate interview answers</option>
+            </select>
 
-    <form id="advisor-form" action="/process" method="post" enctype="multipart/form-data">
-      <label for="task">Choose a task:</label>
-      <select name="task" id="task" required>
-        <option value="" disabled selected>-- Select a task --</option>
-        <option value="extract_job">Extract job advert requirements</option>
-        <option value="cv_feedback">Get advice on improving your CV</option>
-        <option value="cv_rewrite">Rewrite your CV to UK format</option>
-        <option value="tailor_advice">Get advice on tailoring your CV to a job</option>
-        <option value="tailor_rewrite">Rewrite your CV tailored to a job</option>
-        <option value="interview_questions">Generate likely interview questions</option>
-        <option value="answer_questions">Suggest interview answers from your CV</option>
-      </select>
+            <div id="job_file_group">
+                <label for="job_file">Upload Job Advert (PDF or DOCX):</label>
+                <input type="file" name="job_file" id="job_file">
+            </div>
 
-      <div id="cv-upload" class="conditional" style="display: none;">
-        <label for="cv_file">Upload your CV (PDF or Word):</label>
-        <input type="file" name="cv_file" id="cv_file" accept=".pdf,.doc,.docx">
-      </div>
+            <div id="cv_file_group">
+                <label for="cv_file">Upload CV (PDF or DOCX):</label>
+                <input type="file" name="cv_file" id="cv_file">
+            </div>
 
-      <div id="job-upload" class="conditional" style="display: none;">
-        <label for="job_file">Upload job advert (PDF or Word):</label>
-        <input type="file" name="job_file" id="job_file" accept=".pdf,.doc,.docx">
-      </div>
-
-      <br>
-      <button type="submit">Submit</button>
-    </form>
-  </div>
-
-  <!-- Script to control field visibility and spinner -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const taskSelect = document.getElementById("task");
-      const cvUpload = document.getElementById("cv-upload");
-      const jobUpload = document.getElementById("job-upload");
-      const form = document.getElementById("advisor-form");
-      const loading = document.getElementById("loading");
-
-      function updateInputs() {
-        const task = taskSelect.value;
-        cvUpload.style.display = "none";
-        jobUpload.style.display = "none";
-
-        if (["cv_feedback", "cv_rewrite"].includes(task)) {
-          cvUpload.style.display = "block";
-        } else if (["extract_job", "interview_questions"].includes(task)) {
-          jobUpload.style.display = "block";
-        } else if (["tailor_advice", "tailor_rewrite", "answer_questions"].includes(task)) {
-          cvUpload.style.display = "block";
-          jobUpload.style.display = "block";
-        }
-      }
-
-      taskSelect.addEventListener("change", updateInputs);
-
-      if (form && loading) {
-        form.addEventListener("submit", () => {
-          loading.classList.remove("hidden");
-        });
-      }
-
-      // Run once on load to hide fields if needed
-      updateInputs();
-    });
-  </script>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 </body>
 </html>

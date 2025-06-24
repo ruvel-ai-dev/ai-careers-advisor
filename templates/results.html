@@ -4,41 +4,14 @@
     <meta charset="UTF-8">
     <title>AI Careers Advisor – Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        .result-box pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            max-width: 80ch;
-            margin: 0 auto;
-            padding: 1rem;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            font-family: monospace;
+    <script>
+        function copyText() {
+            const text = document.getElementById("result-content").innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Copied to clipboard!");
+            });
         }
-
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .button {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            background-color: #1a3c87;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .error {
-            color: red;
-        }
-    </style>
+    </script>
 </head>
 <body>
     <div class="container">
@@ -49,8 +22,12 @@
         {% else %}
             <h2>Response:</h2>
             <div class="result-box">
-                <pre>{{ result }}</pre>
+                <pre id="result-content">{{ result }}</pre>
             </div>
+
+            {% if result and "generated below" not in result.lower() %}
+                <button class="copy-button" onclick="copyText()">Copy Result</button>
+            {% endif %}
 
             {% if download_link %}
                 <a class="button" href="{{ download_link }}">Download File</a>

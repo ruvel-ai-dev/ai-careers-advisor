@@ -1,8 +1,7 @@
-from flask import Flask, render_template, request, send_file, send_from_directory, abort, url_for
+from flask import Flask, render_template, request, send_from_directory, abort, url_for
 import os
 import uuid
-from docx import Document  # ✅ NEW: For .docx output
-
+from docx import Document
 from utils.extract_text import extract_text_from_file
 from utils.cv_feedback import give_cv_feedback, improve_cv
 from utils.tailor_cv import tailor_cv_to_job
@@ -23,7 +22,6 @@ def index():
 @app.route('/process', methods=['POST'])
 def process():
     task = request.form.get('task')
-
     job_file = request.files.get('job_file')
     cv_file = request.files.get('cv_file')
 
@@ -51,72 +49,54 @@ def process():
             if not cv_path:
                 return render_template("results.html", error="Please upload a CV.")
             cv_text = extract_text_from_file(cv_path)
-            result = give_cv_feedback(cv_text)
+            result = clean_output(give_cv_feedback(cv_text))
 
         elif task == "cv_rewrite":
             if not cv_path:
                 return render_template("results.html", error="Please upload a CV.")
             cv_text = extract_text_from_file(cv_path)
-            rewritten = improve_cv(cv_text)
+            rewritten = clean_output(improve_cv(cv_text))
 
-            # ✅ Save as .docx file
             output_file = f"{cv_path}_improved.docx"
-            doc = Document()
-            for line in rewritten.split('\n'):
-                if line.strip():
-                    doc.add_paragraph(line.strip())
-            doc.save(output_file)
+            save_docx(output_file, rewritten)
 
             rel_path = os.path.relpath(output_file, app.config['UPLOAD_FOLDER'])
             download_url = url_for('download_file', filename=rel_path)
-            return render_template(
-                "results.html",
-                result="Improved CV generated below.",
-                download_link=download_url,
-            )
+            return render_template("results.html", result="Improved CV generated below.", download_link=download_url)
 
         elif task == "tailor_advice":
             if not cv_path or not job_path:
                 return render_template("results.html", error="Please upload both CV and job advert.")
             cv_text = extract_text_from_file(cv_path)
             job_text = extract_text_from_file(job_path)
-            result = tailor_cv_to_job(cv_text, job_text, mode="advice")
+            result = clean_output(tailor_cv_to_job(cv_text, job_text, mode="advice"))
 
         elif task == "tailor_rewrite":
             if not cv_path or not job_path:
                 return render_template("results.html", error="Please upload both CV and job advert.")
             cv_text = extract_text_from_file(cv_path)
             job_text = extract_text_from_file(job_path)
-            tailored = tailor_cv_to_job(cv_text, job_text, mode="rewrite")
+            tailored = clean_output(tailor_cv_to_job(cv_text, job_text, mode="rewrite"))
 
-            # ✅ Save as .docx file
             output_file = f"{cv_path}_tailored.docx"
-            doc = Document()
-            for line in tailored.split('\n'):
-                if line.strip():
-                    doc.add_paragraph(line.strip())
-            doc.save(output_file)
+            save_docx(output_file, tailored)
 
             rel_path = os.path.relpath(output_file, app.config['UPLOAD_FOLDER'])
             download_url = url_for('download_file', filename=rel_path)
-            return render_template(
-                "results.html",
-                result="Tailored CV generated below.",
-                download_link=download_url,
-            )
+            return render_template("results.html", result="Tailored CV generated below.", download_link=download_url)
 
         elif task == "interview_questions":
             if not job_path:
                 return render_template("results.html", error="Please upload a job advert.")
             job_text = extract_text_from_file(job_path)
-            result = generate_interview_questions(job_text)
+            result = clean_output(generate_interview_questions(job_text))
 
         elif task == "answer_questions":
             if not cv_path or not job_path:
                 return render_template("results.html", error="Please upload both CV and job advert.")
             job_text = extract_text_from_file(job_path)
             cv_text = extract_text_from_file(cv_path)
-            result = generate_answers_from_cv(job_text, cv_text)
+            result = clean_output(generate_answers_from_cv(job_text, cv_text))
 
         else:
             result = "Invalid option selected."
@@ -133,7 +113,19 @@ def download_file(filename):
         abort(400)
     return send_from_directory(app.config['UPLOAD_FOLDER'], safe_path, as_attachment=True)
 
+def clean_output(text):
+    """Remove markdown-style asterisks and unnecessary symbols from LLM output."""
+    return text.replace("**", "").replace("*", "").strip()
+
+def save_docx(path, text):
+    doc = Document()
+    for line in text.split('\n'):
+        if line.strip():
+            doc.add_paragraph(line.strip())
+    doc.save(path)
+
 if __name__ == '__main__':
     debug_env = os.getenv('FLASK_DEBUG', 'False')
     debug_mode = debug_env.lower() in ('1', 'true', 'yes', 'y', 't')
     app.run(debug=debug_mode)
+
